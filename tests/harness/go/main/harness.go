@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
+	"github.com/ebauman/protoc-gen-validate/tests/harness/cases/go"
 	"io/ioutil"
 	"log"
 	"os"
 
-	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
-	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
-	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
+	_ "github.com/ebauman/protoc-gen-validate/tests/harness/cases/go"
+	_ "github.com/ebauman/protoc-gen-validate/tests/harness/cases/other_package/go"
+	harness "github.com/ebauman/protoc-gen-validate/tests/harness/go"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/genproto/protobuf/field_mask"
