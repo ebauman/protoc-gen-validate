@@ -9,9 +9,10 @@ import (
 
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
-	"github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
+	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
+	"google.golang.org/genproto/protobuf/field_mask"
 )
 
 func main() {
@@ -23,24 +24,17 @@ func main() {
 
 	da := new(ptypes.DynamicAny)
 	checkErr(ptypes.UnmarshalAny(tc.Message, da))
+	mask := tc.Mask
 
-	_, isIgnored := da.Message.(*cases.MessageIgnored)
-
-	msg, hasValidate := da.Message.(interface {
+	// just don't panic
+	_ = da.Message.(interface {
 		Validate() error
 	})
 
-	if isIgnored {
-		// confirm that ignored messages don't have a validate method
-		if hasValidate {
-			err = fmt.Errorf("ignored message has Validate() method")
-		}
-	} else if !hasValidate {
-		err = fmt.Errorf("non-ignored message is missing Validate()")
-	} else {
-		err = msg.Validate()
-	}
-	checkValid(err)
+	msg := da.Message.(interface {
+		ValidateWithMask(*field_mask.FieldMask) error
+	})
+	checkValid(msg.ValidateWithMask(mask))
 }
 
 func checkValid(err error) {
